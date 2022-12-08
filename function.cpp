@@ -216,13 +216,13 @@ void SearchPCRforTeacher() {
 	showcursor();
 	if (keyin == 1) {
 		
-		gotoxy(20, 3, "输入班级名称");		
+		gotoxy(20, 3, "输入班级名称  ");		
 		getline(cin, temp);
 		proc.CheckClassPCR(temp);
 		cin.clear();
 	}
 	else if (keyin == 2) {
-		gotoxy(20, 3, "输入学生学号");
+		gotoxy(20, 3, "输入学生学号  ");
 		getline(cin, temp);
 		proc.CheckStudentPCR(temp);
 		cin.clear();

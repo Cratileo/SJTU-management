@@ -1,12 +1,7 @@
-#include <ctime>
-#include<random>
 #include"Win_define.h"
 
 const HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);//返回标准输出设备句柄
 const HANDLE in = GetStdHandle(STD_INPUT_HANDLE);//返回标准输入设备句柄
-
-std::random_device rd;                  //初始化随机数器
-std::default_random_engine e(rd());     //选择默认随机数引擎
 
     //控制光标位置 
 void gotoxy(const int x, const int y, std::string str)
@@ -28,33 +23,6 @@ void gotoxy(const int x, const int y, std::string str)
         coord.Y = y;
         hout = GetStdHandle(STD_OUTPUT_HANDLE);
         SetConsoleCursorPosition(hout, coord);
-    }
-
-    void color(int c) {  //设置颜色 
-        switch (c)
-        {
-        case red:SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED); break;
-        case green:SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_GREEN); break;
-        case yellow:SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN); break;
-        case blue:SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_BLUE); break;
-        case white:SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); break;
-        case purple:SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_BLUE); break;
-        }
-    }
-
-    //产生一个 [l,r] 范围的随机数 
-    int random(int l, int r) 
-    {
-        std::uniform_int_distribution<time_t> u(l, r);
-        return u(e);
-
-    }
-
-    //检测按键是否按下
-    bool check(char ch)  //检测某个按键是否按下，按下返回 true，否则返回 false，参数：按键表示的字符
-    {
-        if (KEY_DOWN(ch)) return true;
-        else return false;
     }
 
     //清屏

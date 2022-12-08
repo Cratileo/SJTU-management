@@ -2,7 +2,7 @@
 admin,admin123,522031145141,student
 superacc,acc0#@,114514,teacher
 test,test123,1145141919,teacher
-littleshizhi,@ss,519031736123,student
-duan,@duantest,1103746123,student
+littleshizhi,@ss,519031910403,student
+duan,@duantest,1104526893,student
 lei,@leitest,522031910765,student
 

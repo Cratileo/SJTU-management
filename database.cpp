@@ -562,18 +562,19 @@ void Processtodo::PCRprocess(string& info) {
 	{
 		Studentinfo st;
 		Dormitory dom;
-		PCR tempPCR;
+		COleDateTime TimeA, TimeB;//储存临时时间
+		string ConcA, ConcB;//储存临时结果
+
 		finout.seekg(0);
 		fdom.seekg(0);
 		long ctstu = 0, ctdom = 0;//记录文件写入位置 
 
 		while (finout.read((char*)&st, sizeof Studentinfo)) {
 			if (accountT == st.id) {
-				temparr.erase(temparr.begin(), temparr.begin() + 1);//将数组首的姓名学号去除，只留下核算信息
+				temparr.erase(temparr.begin(), temparr.begin() + 1);//将数组首的姓名学号去除，只留下核酸信息
 				int count = 1;//用来记录条目，便于报错时指出是第几条信息出错
 				COleDateTimeSpan ts = 100;	//计算现在时间与其核酸时间的差值
-				if(st.pcrinfo.size()>5)
-					st.pcrinfo.resize(1);//初始化计数
+				
 
 				for (auto tp : temparr) {
 					stringstream pcr(tp);		//对每一个单条核酸信息进行处理
@@ -588,16 +589,23 @@ void Processtodo::PCRprocess(string& info) {
 						continue;
 					}
 
-					tempPCR.PCRconsequence = concequence[6];
-					tempPCR.PCRdate.SetDateTime(stoi(concequence[0]), stoi(concequence[1]), stoi(concequence[2]),
+					ConcA = concequence[6];
+					TimeA.SetDateTime(stoi(concequence[0]), stoi(concequence[1]), stoi(concequence[2]),
 												stoi(concequence[3]), stoi(concequence[4]), stoi(concequence[5]));
 
-					if (st.pcrinfo.size() == 5) //储存最多五次核酸记录
-						st.pcrinfo.erase(st.pcrinfo.begin());
+					
 
-					COleDateTimeSpan tempT = timenow - tempPCR.PCRdate;	//计算现在时间与其核酸时间的差值
-					if (tempT < ts) ts = tempT;
-					st.pcrinfo.push_back(tempPCR);
+					COleDateTimeSpan tempT = timenow - TimeA;	//计算现在时间与其核酸时间的差值
+					if (tempT < ts) {
+						ts = tempT;
+						TimeB = TimeA;
+						ConcB = ConcA;
+					}
+				}
+
+				if (TimeB > st.PCRdate) {
+					st.PCRdate = TimeB;
+					st.PCRconsequence = ConcB;
 				}
 
 				//学生信息录入到此结束，现在是楼栋信息维护
@@ -682,13 +690,16 @@ void Processtodo::CheckStudentPCR(string& num) {
 		fread.seekg(0);
 		while (fread.read((char*)&st, sizeof Studentinfo)) {
 			if (num == st.id) {
-				gotoxy(40, 5, "查询到以下核酸信息");
-				gotoxy(0, 9);
-				for (auto p : st.pcrinfo) {
-					CString timeT;
-					timeT = p.PCRdate.Format(_T("%Y年%m月%d日"));
-					cout << format("检测时间：{}   结果：{}", (CT2A)timeT, p.PCRconsequence) << endl;
-				}
+				gotoxy(60, 5, "查询到以下最后一次核酸信息");
+				gotoxy(40, 8);
+				cout << "姓名： " << st.name;
+				gotoxy(40, 11);
+				CString timeT;
+				timeT = st.PCRdate.Format(_T("%Y年%m月%d日 %H:%M:%S"));
+				cout << format("检测时间：{}   结果：{}", (CT2A)timeT, st.PCRconsequence);
+				gotoxy(40, 13);
+				cout << "状态： " << st.PCRstate;
+				break;
 			}
 		}
 	}

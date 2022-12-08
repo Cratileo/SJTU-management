@@ -5,13 +5,6 @@
 using std::string;
 using std::vector;
 
-struct PCR {
-	COleDateTime PCRdate{};
-	string PCRconsequence = "NA";
-};
-
-static vector<PCR>copyto;//用来解决拷贝初始化问题
-
 class Studentinfo {
 public:
 	//基本数据
@@ -32,8 +25,10 @@ public:
 	string Applyreason = "NA";
 	string Applycampus = "NA";
 	string Applyway = "1";
+	//核酸数据
+	COleDateTime PCRdate;
+	string PCRconsequence = "NA";//改为保留最后一次核酸记录
 
-	vector<PCR> pcrinfo{ copyto };//保留最近五次核酸记录（问题在这里！！！）
 };
 
 class Dormitory {
@@ -66,7 +61,6 @@ public:
 	void showdormitory();	//显示按解封时间排序的被封控楼栋
 	void PCRprocess(string&);//处理PCR内容
 };
-
 
 
 char checkaccount(string,string);  //校验输入账号是否存在
