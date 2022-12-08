@@ -1,4 +1,4 @@
-/*do not read it*/
+/*do not read it*/(从左至右依次是账号，密码，对应学号，账户性质）
 admin,admin123,522031145141,student
 superacc,acc0#@,114514,teacher
 test,test123,1145141919,teacher
