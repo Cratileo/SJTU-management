@@ -3,17 +3,15 @@
 #include<sstream>
 #include<fstream>
 #include<cstdlib>
-#include<format>//debug临时引用，release中记得删
+#include<format>
 #include<memory>
 using namespace std;
 
 COleDateTime timenow(COleDateTime::GetCurrentTime());//系统当前时间
 
-extern string accountNOW = "000";
+extern string accountNOW = "000";  //用户当前账号，登录后会赋值
 
 extern Processtodo proc{};
-
-extern int datanum = 0;//初始学生数据条数
 
 const char* file = "data.dat";//学生数据文件
 
@@ -160,6 +158,7 @@ void Processtodo::Infoprocess(string& str) {
 	fdomadd.close();
 }
 
+//暂不可用
 string Processtodo::SearchAndCheck(const string &idT) {
 	Studentinfo st;
 	fstream finout;
@@ -177,29 +176,6 @@ string Processtodo::SearchAndCheck(const string &idT) {
 	}
 	finout.close();
 	return defaul;
-}
-
-void Processtodo::readtest() {
-	ifstream fread;
-	{
-		Studentinfo st;
-		
-		fread.open(file, ios_base::in | ios_base::binary);
-		fread.seekg(0);
-		while (fread.read((char*)&st, sizeof Studentinfo)) {
-			cout <<
-				format("{} {} {} {} {} {} {}", st.name, st.id, st.telephone, st.school, st.classnum, st.address, st.vaccine)
-				<< endl;
-		}
-/*		if (fread.eof())
-			fread.clear();
-		else
-		{
-			cerr << "ERROR";
-			exit(EXIT_FAILURE);
-		}*/
-	}
-	fread.close();
 }
 
 bool Processtodo::checkapply(vector<string>& info) {
@@ -221,6 +197,7 @@ bool Processtodo::checkapply(vector<string>& info) {
 					return true;
 				}
 				else break;
+				//000代表未申请状态，也是初始化状态
 			}
 		}
 	}

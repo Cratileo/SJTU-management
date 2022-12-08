@@ -241,7 +241,7 @@ void SearchPCRforTeacher() {
 
 void SearchPCRforStudent() {
 	cls();
-	proc.CheckStudentPCR(accountNOW);
+	proc.CheckStudentPCR(accountNOW);//共用函数，这里传过去的是学生端当前学号
 	gotoxy(30, 35, "[ESC]返回");
 	while (1) {
 		int keyin = _getch() - 48;

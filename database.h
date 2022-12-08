@@ -1,7 +1,7 @@
 #pragma once
 #include<string>
 #include<vector>
-#include<ATLComTime.h>	//获取系统时间
+#include<ATLComTime.h>	//定义时间的一个类
 using std::string;
 using std::vector;
 
@@ -14,6 +14,7 @@ static vector<PCR>copyto;//用来解决拷贝初始化问题
 
 class Studentinfo {
 public:
+	//基本数据
 	string name = "NA";
 	string id = "000";
 	string telephone = "000";
@@ -21,10 +22,10 @@ public:
 	string address = "NA";
 	string classnum = "NA";
 	string vaccine = "NA";
-
+	//核酸数据
 	string PCRstate = "NA";//核酸状态：24小时/48小时/72小时
 	bool isTodayPCR = false;//是否是当日核酸
-
+	//审批数据
 	string Applystate = "000";
 	string ApplyIndate = "000";
 	string ApplyOutdate = "000";
@@ -32,7 +33,7 @@ public:
 	string Applycampus = "NA";
 	string Applyway = "1";
 
-	vector<PCR> pcrinfo{ copyto };//保留最近五次核酸记录
+	vector<PCR> pcrinfo{ copyto };//保留最近五次核酸记录（问题在这里！！！）
 };
 
 class Dormitory {
@@ -53,7 +54,6 @@ public:
 	//对studentinfo类的操作
 	void Infoprocess(string&);//二次分割数据入库
 	string SearchAndCheck(const string&);//数据搜索与查重
-	void readtest();//test
 	bool checkapply(vector<string>& info);//查询是否存在申请以及返回申请记录
 	void toapply();//进行申请
 	void deleteapply();//学生删除申请
@@ -65,7 +65,6 @@ public:
 	void setstate(string&); //设置楼栋状态
 	void showdormitory();	//显示按解封时间排序的被封控楼栋
 	void PCRprocess(string&);//处理PCR内容
-	
 };
 
 
