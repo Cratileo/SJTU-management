@@ -443,7 +443,7 @@ void Processtodo::setstate(string& dormname) {
 		else {
 			gotoxy(30, 12, "修改");
 			printline(13);
-			gotoxy(30, 15, "设置该楼封控:[Y/N](按键盘上的对应按键)   ");
+			gotoxy(30, 15, "设置该楼封控:[Y/N](按键盘上的对应按键)(输入一条信息完成之后按回车“比如输入完2022之后按回车继续输入月”)   ");
 			int keyin;
 			while (1) {
 				keyin = _getch();
