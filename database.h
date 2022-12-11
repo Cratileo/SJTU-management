@@ -46,25 +46,27 @@ public:
 };
 
 class Processtodo {
+    //用于配合I/O输入输出
 public:
 	Studentinfo st[100];
 	Dormitory dom[40];
 
-	//对studentinfo类的操作
+	//对studentinfo的操作
 	void Infoprocess(string&);//二次分割数据入库
 	string SearchAndCheck(const string&);//数据搜索与查重
 	bool checkapply(vector<string>& info);//查询是否存在申请以及返回申请记录
 	void toapply();//进行申请
 	void deleteapply();//学生删除申请
+    void changeapply();//学生修改申请
 	void teacherapply();//教师审批出入校
+    void PCRprocess(string&);//处理PCR内容
 	void CheckClassPCR(string&);//按班级查询核酸信息
 	void CheckStudentPCR(string&);//按学号查询核酸信息
-	//对dormtory类的操作
-	void getPCR(); //获取宿舍楼核酸人数
+	//对dormtory的操作
+	void getDormPCR(); //获取宿舍楼核酸人数
 	void setstate(string&); //设置楼栋状态
 	void showdormitory();	//显示按解封时间排序的被封控楼栋
-	void PCRprocess(string&);//处理PCR内容
-    void addinfo();  //维护楼栋信息不完全的内容
+    void addinfo(string&);  //维护楼栋信息不完全的内容
 };
 
 class Util //信息切分工具
@@ -157,3 +159,7 @@ void Application();	//进出校申请教师端
 void DormitoryManage();//宿舍楼管理界面
 
 void SearchPCRforStudent();//核酸检测结果查询学生端
+
+void Dormprocess(string& str); //楼栋信息录入
+
+void AddDorm();//录入楼栋信息界面

@@ -31,8 +31,10 @@ void StudentApply() {
 			if (applyinfo[0] != "待审核")
 				gotoxy(130, 32, "[1]重新申请");
 
-			else if (applyinfo[0] == "待审核")
+			else if (applyinfo[0] == "待审核") {
 				gotoxy(130, 32, "[1]删除申请");
+				gotoxy(130, 34, "[2]修改申请");
+			}
 
 			int keyin;
 			while (1) {
@@ -52,6 +54,13 @@ void StudentApply() {
 					proc.deleteapply();
 					gotoxy(30, 35, "删除成功");
 					Sleep(500);
+					cls();
+					return;
+				}
+				if (applyinfo[0] == "待审核" && keyin == 2) {
+					proc.changeapply();
+					gotoxy(30, 35, "修改成功");
+					Sleep(300);
 					cls();
 					return;
 				}
@@ -174,7 +183,7 @@ void DormitoryManage() {
 
 	if (keyin == 1) {
 		cls();
-		proc.getPCR();
+		proc.getDormPCR();
 	}
 	else if (keyin == 2) {
 		string temp;
@@ -250,4 +259,33 @@ void SearchPCRforStudent() {
 			return;
 		}
 	}
+}
+
+void AddDorm() {
+	cls();
+	gotoxy(20, 5, "输入时，请使用‘：’作为信息类与信息间分隔符，请使用‘，’作为信息类间分隔符，请使用‘；’作为信息归属者间分隔符");
+	gotoxy(20, 7, "例如：楼名：D27，容量：100，楼长：XXX；楼名：X26，容量：50，楼长：XXX；");
+	gotoxy(20, 9, "请输入： ");
+	showcursor();
+
+	string s;
+	getline(cin, s);
+	hidecursor();
+	Dormprocess(s);
+	gotoxy(20, 30, "输入成功");
+	gotoxy(50, 30, "[1]继续输入");
+	gotoxy(80, 30, "[ESC]返回上级菜单");
+	int keyin;
+	while (1) {
+		keyin = _getch() - 48;
+		if (keyin == -21) {
+			cls();
+			return;
+		}
+		if (keyin == 1) break;
+	}
+
+	cls();
+	if (keyin == 1)
+		AddDorm();
 }

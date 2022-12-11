@@ -374,7 +374,102 @@ void Processtodo::deleteapply() {
 	finout.close();
 }
 
-void Processtodo::getPCR() {
+void Processtodo::changeapply() {
+	fstream finout;
+	finout.open(file, ios::in | ios::out | ios::binary);
+	{
+		Studentinfo st;
+		string name;
+		long ct = 0;
+		if (!finout.is_open()) {
+			cerr << file << " could not be opened";
+			Sleep(1000);
+			exit(EXIT_FAILURE);
+		}
+		finout.seekg(0);
+
+		while (finout.read((char*)&st, sizeof Studentinfo)) {
+			if (st.id == accountNOW) {
+				cls();
+				gotoxy(25, 15, "[1]修改校区");
+				gotoxy(25, 20, "[2]修改进出校类型/时间");
+				gotoxy(25, 25, "[3]修改原因");
+
+				int keyin;
+				int tempnum[3] = { 1,2,3 };
+				keyin = checknum(tempnum, 3);
+				cls();
+				showcursor();
+				switch (keyin) {
+				case 1:
+					gotoxy(30, 22, "选择校区[1]徐汇校区，[2]闵行校区   ");
+					cin >> st.Applycampus;
+					while (1) {
+						if (st.Applycampus == "1") st.Applycampus = "徐汇校区";
+						else if (st.Applycampus == "2") st.Applycampus = "闵行校区";
+						else {
+							cin >> st.Applycampus;
+							continue;
+						}
+						gotoxy(20, 30, "完成");
+						Sleep(300);
+						break;
+					}
+					break;
+				case 2:
+					gotoxy(30, 12, "进出校方式（填数字），[1]仅进校；[2]仅出校;[3]先进后出;[4]先出后进:   ");
+					int r;
+					cin >> r;
+					switch (r)
+					{
+					case 1:
+						st.Applyway = "仅进校";
+						gotoxy(30, 16, "请输入申请入校时间（YYYYMMDD）： ");
+						cin >> st.ApplyIndate;
+						break;
+					case 2:
+						st.Applyway = "仅出校";
+						gotoxy(30, 16, "请输入申请出校时间（YYYYMMDD）： ");
+						cin >> st.ApplyOutdate;
+						break;
+					case 3:
+						st.Applyway = "先进后出";
+						gotoxy(30, 16, "请输入申请入校时间（xxxx.xx.xx）：");
+						cin >> st.ApplyIndate;
+						gotoxy(30, 20, "请输入申请出校时间（xxxx.xx.xx）：");
+						cin >> st.ApplyOutdate;
+						break;
+					case 4:
+						st.Applyway = "先出后进";
+						gotoxy(30, 16, "请输入申请入校时间（xxxx.xx.xx）：");
+						cin >> st.ApplyIndate;
+						gotoxy(30, 20, "请输入申请出校时间（xxxx.xx.xx）：");
+						cin >> st.ApplyOutdate;
+						break;
+					}
+					gotoxy(20, 30, "完成");
+					break;
+				case 3:
+					gotoxy(30, 16, "请输入申请原因：");
+					cin >> st.Applyreason;
+					gotoxy(20, 30, "完成");
+					break;
+				}
+				break;
+			}
+			ct++;
+		}
+		streampos place = ct * sizeof Studentinfo;	//用于记录该条记录的位置，不必重复重头查，优化程序
+		finout.seekg(place);
+		finout.write((char*)&st, sizeof Studentinfo) << flush;
+	}
+	hidecursor();
+	cin.ignore();
+	cin.clear();
+	finout.close();
+}
+
+void Processtodo::getDormPCR() {
 	ifstream fread;
 	fread.open(domfile, ios_base::in | ios_base::binary);
 	fread.seekg(0);
@@ -711,13 +806,73 @@ void Processtodo::CheckStudentPCR(string& num) {
 	fread.close();
 }
 
-//
-void Processtodo::addinfo() {
+void Dormprocess(string& str) {
+	/*用stringstream函数处理输入的字符串，以';'为条目分隔符，','为条目中的信息分隔符*/
+
+	vector<string> splitSemicolon = Util::split(str, "；");
+	for (auto& arr : splitSemicolon)
+		proc.addinfo(arr);
+}
+
+void Processtodo::addinfo(string& str) {
+	string capT, admin, nameT;
 	fstream finout;
 	{
+		vector<string> splitComma = Util::split(str, "，");
+
+		if (splitComma.size() != 3)//数据准确性校验
+		{
+			gotoxy(25, 25, "ERROR:数据缺失（部分条目信息不全）");
+			Sleep(1000);
+			return;
+		}
+
+		for (int j = 0; j < splitComma.size(); ++j)
+		{
+			// 以中文冒号为分隔符对字符串进行分割
+			vector<string> splitColon = Util::split(splitComma[j], "：");
+			if (splitColon[0] == "容量")
+				capT = splitColon[1];
+			else if (splitColon[0] == "楼名")
+				nameT = splitColon[1];
+			else if (splitColon[0] == "楼长")
+				admin = splitColon[1];
+		}
+
 		Dormitory dom;
 		finout.open("dom.dat", ios::in | ios::out | ios::binary);
 		finout.seekg(0);
-	}
 
+		bool flag = true;
+		long ct = 0;
+		while (finout.read((char*)&dom, sizeof Dormitory)) {
+			if (dom.buildingname == nameT) {
+				//若已存在由学生信息录入时导入的宿舍楼信息，则只需要追加维护
+				dom.capacity = stoi(capT);
+				dom.admin = admin;
+				streampos place = ct * sizeof Dormitory;
+				finout.seekg(place);
+				finout.write((char*)&dom, sizeof Dormitory) << flush;
+
+				if (finout.fail()) {
+					cerr << "ERROR,无法读写文件";
+					Sleep(600);
+					exit(EXIT_FAILURE);
+				}
+				finout.close();
+				return;
+			}
+			ct++;
+		}
+
+		//没有就追加宿舍楼
+		ofstream fdomadd(domfile, ios_base::out | ios_base::app | ios_base::binary);
+		dom.buildingname = nameT;
+		dom.state = "正常";
+		dom.people = 0;
+		dom.admin = admin;
+		dom.capacity = stoi(capT);
+		fdomadd.write((char*)&dom, sizeof Dormitory) << flush;
+		fdomadd.close();
+	}
 }

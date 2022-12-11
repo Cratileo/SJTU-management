@@ -84,9 +84,10 @@ void teacher() {
 		gotoxy(25, 25, "[3]核酸信息查询");
 		gotoxy(95, 15, "[4]学生进出校审批");
 		gotoxy(95, 20, "[5]学生宿舍楼管理");
+		gotoxy(95, 25, "[6]添加学生宿舍");
 		gotoxy(10, 35, "[ESC]退出登录");
 		int keyin;
-		int tempnum[7] = { 1,2,3,4,5,-21 };
+		int tempnum[7] = { 1,2,3,4,5,6,-21 };
 		keyin = checknum(tempnum, 7);
 		switch (keyin) {
 			case 1: BasicDataStream(); break;
@@ -94,6 +95,7 @@ void teacher() {
 			case 3: SearchPCRforTeacher(); break;
 			case 4: Application(); break;
 			case 5: DormitoryManage(); break;
+			case 6: AddDorm(); break;
 			case -21: cls();  return;
 		}
 	}
