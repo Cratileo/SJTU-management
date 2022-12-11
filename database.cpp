@@ -106,14 +106,6 @@ void Processtodo::Infoprocess(string& str) {
 	}
 
 	//写入data.dat(二进制方式）   
-
-	//数据查重
-	/*if (SearchAndCheck(temparr[1]) != "pass") {
-		gotoxy(25, 28, "ERROR:存在重复学号:");
-		Sleep(2000);
-		return;
-	}*/
-
 	ofstream fout(file, ios_base::out | ios_base::app | ios_base::binary);	  //这是用来写学生信息的
 
 	if (!fout.is_open()) {
@@ -161,26 +153,6 @@ void Processtodo::Infoprocess(string& str) {
 	dom.people = 1;
 	fdomadd.write((char*)&dom, sizeof Dormitory) << flush;
 	fdomadd.close();
-}
-
-//暂不可用
-string Processtodo::SearchAndCheck(const string &idT) {
-	Studentinfo st;
-	fstream finout;
-	string defaul{"pass"};
-	finout.open(file, ios::in | ios::out | ios::binary);
-	if (finout.is_open()) {
-		finout.seekg(0);
-		while (finout.read((char*)&st, sizeof st)) {
-			if (st.id == idT) {
-				cout << st.name;
-				defaul = idT;
-				break;
-			}
-		}
-	}
-	finout.close();
-	return defaul;
 }
 
 bool Processtodo::checkapply(vector<string>& info) {

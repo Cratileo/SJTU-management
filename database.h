@@ -53,7 +53,6 @@ public:
 
 	//对studentinfo的操作
 	void Infoprocess(string&);//二次分割数据入库
-	string SearchAndCheck(const string&);//数据搜索与查重
 	bool checkapply(vector<string>& info);//查询是否存在申请以及返回申请记录
 	void toapply();//进行申请
 	void deleteapply();//学生删除申请
