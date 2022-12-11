@@ -1,6 +1,5 @@
 #include"Win_define.h"
 #include"database.h"
-#include<sstream>
 #include<fstream>
 #include<cstdlib>
 #include<format>
@@ -62,33 +61,47 @@ char checkaccount(string acc, string pw) {
 }
 
 void streamprocess(string& str) {
-	stringstream ss(str);
-	string temp;
-	vector<string>temparr;
-
 	/*用stringstream函数处理输入的字符串，以';'为条目分隔符，','为条目中的信息分隔符*/
 
-	while (getline(ss, temp, ';'))
-		temparr.push_back(temp);
-	for (auto& arr : temparr) {
+	vector<string> splitSemicolon = Util::split(str, "；");
+	for (auto& arr : splitSemicolon)
 		proc.Infoprocess(arr);
-	}
 }
 
 void Processtodo::Infoprocess(string& str) {
-	stringstream ss(str);
 	Studentinfo st;
 	Dormitory dom;
 	string temp;
-	vector<string>temparr;
+	// 以中文逗号为分隔符对字符串进行分割
+	vector<string> splitComma = Util::split(str, "，");
+	for (int j = 0; j < splitComma.size(); ++j)
+	{
+		// 以中文冒号为分隔符对字符串进行分割
+		vector<string> splitColon = Util::split(splitComma[j], "：");
+		if (splitColon[0] == "姓名")
+			st.name = splitColon[1];
+		else if (splitColon[0] == "学号")
+			st.id = splitColon[1];
+		else if (splitColon[0] == "电话")
+			st.telephone = splitColon[1];
+		else if (splitColon[0] == "学院")
+			st.school = splitColon[1];
+		else if (splitColon[0] == "寝室楼栋") {
+			temp = splitColon[1];
+			st.address = splitColon[1];
+		}
+		else if (splitColon[0] == "班级")
+			st.classnum = splitColon[1];
+		else if (splitColon[0] == "体温")
+			st.temperature = splitColon[1];
+	}
 
-	while (getline(ss, temp, ','))
-		temparr.push_back(temp);
+	hidecursor();
 
-	if (temparr.size() != 7)//只能存基本数据，核酸另行输入
+	if (splitComma.size() != 7)//只能存基本数据，核酸另行输入
 	{
 		gotoxy(25, 25, "ERROR:数据缺失（部分学生条目信息不全）");
-		Sleep(2000);
+		Sleep(1000);
 		return;
 	}
 
@@ -109,14 +122,6 @@ void Processtodo::Infoprocess(string& str) {
 		exit(EXIT_FAILURE);
 	}
 
-	st.name = temparr[0];
-	st.id = temparr[1];
-	st.telephone = temparr[2];
-	st.school = temparr[3];
-	st.address = temparr[5];
-	st.classnum = temparr[4];
-	st.vaccine = temparr[6];
-
 	fout.write((char*)&st, sizeof Studentinfo) << flush;
 	fout.close();
 
@@ -130,7 +135,7 @@ void Processtodo::Infoprocess(string& str) {
 	fdom.seekg(0);
 	long ct = 0;
 	while (fdom.read((char*)&dom, sizeof Dormitory)) {
-		if (temparr[5] == dom.buildingname) {
+		if (temp == dom.buildingname) {
 			dom.people++;
 			//开始写入
 			streampos place = ct * sizeof Dormitory;
@@ -151,7 +156,7 @@ void Processtodo::Infoprocess(string& str) {
 
 	//如果不存在该宿舍楼，追加
 	ofstream fdomadd(domfile, ios_base::out | ios_base::app | ios_base::binary);
-	dom.buildingname = temparr[5];
+	dom.buildingname = temp;
 	dom.state = "正常";
 	dom.people = 1;
 	fdomadd.write((char*)&dom, sizeof Dormitory) << flush;
@@ -545,7 +550,7 @@ void Processtodo::PCRprocess(string& info) {
 	string accountT;
 	vector<string>temparr;
 
-	/*这里传过来的info是一个人的信息，但可以包含至多五天的核酸信息*/
+	/*这里传过来的info是一个人的信息*/
 
 	/*用stringstream函数处理输入的字符串，以';'为条目分隔符，'.'为条目中的信息分隔符*/
 
@@ -704,4 +709,15 @@ void Processtodo::CheckStudentPCR(string& num) {
 		}
 	}
 	fread.close();
+}
+
+//
+void Processtodo::addinfo() {
+	fstream finout;
+	{
+		Dormitory dom;
+		finout.open("dom.dat", ios::in | ios::out | ios::binary);
+		finout.seekg(0);
+	}
+
 }

@@ -83,7 +83,7 @@ void BasicDataStream() {
 	cls();
 	string temp;
 	gotoxy(20, 10, "在下面输入信息（以'；'为多条信息分隔符，以'，'为单条信息内多项的分隔符）");
-	gotoxy(20, 12, "例：'张三,522031145141,54749110,电院,电院2201,X83,全程接种;李四,52203xxxxx,xxxx,安泰,xxxx,D8,xxxx'");
+	gotoxy(20, 12, "例：'姓名：张三，学号：522031145141，电话：54749110，学院：电院，班级：电院2201，寝室楼栋：X83，体温：36.7;'");
 	gotoxy(20, 15);
 	showcursor();
 	getline(cin, temp);
@@ -106,7 +106,7 @@ void BasicDataStream() {
 	if (keyin == 1)
 		BasicDataStream();
 }
- //待解决暂不可用
+
 void PCRDataStream() {
 	cls();
 	string temp;
@@ -156,6 +156,7 @@ void Application() {
 
 void DormitoryManage() {
 	cls();
+	//proc.addinfo();
 	proc.showdormitory();
 	gotoxy(80, 5, "[1]宿舍楼核酸查询");
 	gotoxy(80, 10, "[2]宿舍楼封控管理");
@@ -215,7 +216,6 @@ void SearchPCRforTeacher() {
 	string temp;
 	showcursor();
 	if (keyin == 1) {
-		
 		gotoxy(20, 3, "输入班级名称  ");		
 		getline(cin, temp);
 		proc.CheckClassPCR(temp);
