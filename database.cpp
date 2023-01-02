@@ -545,7 +545,7 @@ void Processtodo::setstate(string& dormname) {
 						COleDateTimeSpan ts = dom.endtime - dom.starttime;//校验解封日期必须大于封控日期
 						cin.ignore();
 
-						if (dom.starttime.GetStatus() != COleDateTime::valid|| ts.GetTotalSeconds() <= 0|| dom.starttime<timenow) {
+						if (dom.starttime.GetStatus() != COleDateTime::valid|| ts.GetTotalSeconds() <= 0) {
 							cerr << "时间填写错误！";
 							cls();
 							continue;
