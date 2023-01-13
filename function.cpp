@@ -5,7 +5,6 @@ using std::cin;
 using std::vector;
 using std::cout;
 
-extern Processtodo proc;
 extern string accountNOW;//现在登录者的账号（学号）
 
 void StudentApply() {
@@ -13,6 +12,7 @@ void StudentApply() {
 	int keyin;
 	{
 		vector<string>applyinfo;
+		Studentinfo proc;
 		if (proc.checkapply(applyinfo)) {
 			gotoxy(30, 5, "您的申请状态：");
 			cout << applyinfo[0];
@@ -125,6 +125,7 @@ void PCRDataStream() {
 	gotoxy(20, 15);
 	showcursor();
 	while (1) {
+		Studentinfo proc;
 		getline(cin, temp);
 		if (temp.size() == 0) break;
 		proc.PCRprocess(temp);//每次传过去的都是一个人 
@@ -149,6 +150,7 @@ void PCRDataStream() {
 }
 
 void Application() {
+	Studentinfo proc;
 	cls();
 	gotoxy(30, 2, "当前存在的待审批条目：");
 	proc.teacherapply();
@@ -164,6 +166,7 @@ void Application() {
 }
 
 void DormitoryManage() {
+	Dormitory proc;
 	cls();
 	//proc.addinfo();
 	proc.showdormitory();
@@ -207,6 +210,7 @@ void DormitoryManage() {
 }
 
 void SearchPCRforTeacher() {
+	Studentinfo proc;
 	cls();
 	gotoxy(30, 15, "[1]按班级查询核酸信息");
 	gotoxy(30, 20, "[2]按学号查询核酸信息");
@@ -249,6 +253,7 @@ void SearchPCRforTeacher() {
 }
 
 void SearchPCRforStudent() {
+	Studentinfo proc;
 	cls();
 	proc.CheckStudentPCR(accountNOW);//共用函数，这里传过去的是学生端当前学号
 	gotoxy(30, 35, "[ESC]返回");

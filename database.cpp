@@ -10,8 +10,6 @@ COleDateTime timenow(COleDateTime::GetCurrentTime());//系统当前时间
 
 extern string accountNOW = "000";  //用户当前账号，登录后会赋值
 
-extern Processtodo proc{};
-
 const char* file = "data.dat";//学生数据文件
 
 const char* domfile = "dom.dat";	//宿舍楼数据文件
@@ -64,11 +62,13 @@ void streamprocess(string& str) {
 	/*用stringstream函数处理输入的字符串，以';'为条目分隔符，','为条目中的信息分隔符*/
 
 	vector<string> splitSemicolon = Util::split(str, "；");
-	for (auto& arr : splitSemicolon)
+	for (auto& arr : splitSemicolon) {
+		Studentinfo proc;
 		proc.Infoprocess(arr);
+	}
 }
 
-void Processtodo::Infoprocess(string& str) {
+void Studentinfo::Infoprocess(string& str) {
 	Studentinfo st;
 	Dormitory dom;
 	string temp;
@@ -155,7 +155,7 @@ void Processtodo::Infoprocess(string& str) {
 	fdomadd.close();
 }
 
-bool Processtodo::checkapply(vector<string>& info) {
+bool Studentinfo::checkapply(vector<string>& info) {
 	ifstream fread;
 	{
 		Studentinfo st;
@@ -182,7 +182,7 @@ bool Processtodo::checkapply(vector<string>& info) {
 	return false;
 }
 
-void Processtodo::toapply() {
+void Studentinfo::toapply() {
 	fstream finout;
 	finout.open(file, ios::in | ios::out | ios::binary);
 	{
@@ -271,7 +271,7 @@ void Processtodo::toapply() {
 	hidecursor();
 }
 
-void Processtodo::teacherapply() {
+void Studentinfo::teacherapply() {
 	fstream finout;
 	finout.open(file, ios::in | ios::out | ios::binary);
 	{
@@ -318,7 +318,7 @@ void Processtodo::teacherapply() {
 	hidecursor();
 }
 
-void Processtodo::deleteapply() {
+void Studentinfo::deleteapply() {
 	fstream finout;
 	finout.open(file, ios::in | ios::out | ios::binary);
 	{
@@ -346,7 +346,7 @@ void Processtodo::deleteapply() {
 	finout.close();
 }
 
-void Processtodo::changeapply() {
+void Studentinfo::changeapply() {
 	fstream finout;
 	finout.open(file, ios::in | ios::out | ios::binary);
 	{
@@ -441,7 +441,7 @@ void Processtodo::changeapply() {
 	finout.close();
 }
 
-void Processtodo::getDormPCR() {
+void Dormitory::getDormPCR() {
 	ifstream fread;
 	fread.open(domfile, ios_base::in | ios_base::binary);
 	fread.seekg(0);
@@ -456,7 +456,7 @@ void Processtodo::getDormPCR() {
 	fread.close();
 }
 
-void Processtodo::setstate(string& dormname) {
+void Dormitory::setstate(string& dormname) {
 	fstream finout;
 	finout.open("dom.dat", ios::in | ios::out | ios::binary);
 	{
@@ -572,7 +572,7 @@ void Processtodo::setstate(string& dormname) {
 	hidecursor();
 }
 
-void Processtodo::showdormitory() {
+void Dormitory::showdormitory() {
 	ifstream fread;
 	fread.open(domfile, ios_base::in | ios_base::binary);
 	fread.seekg(0);
@@ -611,7 +611,9 @@ void Processtodo::showdormitory() {
 	fread.close();
 }
 
-void Processtodo::PCRprocess(string& info) {
+void Studentinfo::PCRprocess(string& info) {
+	Studentinfo st;
+	Dormitory dom;
 	stringstream ss(info);
 	string temp;
 	string accountT;
@@ -632,8 +634,6 @@ void Processtodo::PCRprocess(string& info) {
 	fstream fdom;//写入该学生关联的宿舍
 	fdom.open(domfile, ios::in | ios::out | ios::binary);
 	{
-		Studentinfo st;
-		Dormitory dom;
 		COleDateTime TimeA, TimeB;//储存临时时间
 		string ConcA, ConcB;//储存临时结果
 
@@ -729,7 +729,7 @@ void Processtodo::PCRprocess(string& info) {
 	return;
 }
 
-void Processtodo::CheckClassPCR(string&classinfo) {
+void Studentinfo::CheckClassPCR(string&classinfo) {
 	ifstream fread;
 	int classpeople = 0;//某班人数
 	int PCRpeople = 0;//某班做核酸人数
@@ -754,7 +754,7 @@ void Processtodo::CheckClassPCR(string&classinfo) {
 	fread.close();
 }
 
-void Processtodo::CheckStudentPCR(string& num) {
+void Studentinfo::CheckStudentPCR(string& num) {
 	ifstream fread;
 	{
 		Studentinfo st;
@@ -779,6 +779,7 @@ void Processtodo::CheckStudentPCR(string& num) {
 }
 
 void Dormprocess(string& str) {
+	Dormitory proc;
 	/*用stringstream函数处理输入的字符串，以';'为条目分隔符，','为条目中的信息分隔符*/
 
 	vector<string> splitSemicolon = Util::split(str, "；");
@@ -786,7 +787,7 @@ void Dormprocess(string& str) {
 		proc.addinfo(arr);
 }
 
-void Processtodo::addinfo(string& str) {
+void Dormitory::addinfo(string& str) {
 	string capT, admin, nameT;
 	fstream finout;
 	{
